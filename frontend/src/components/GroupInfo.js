@@ -19,10 +19,10 @@ const GroupInfo = () => {
 
   return (
     <Container style={{ marginBottom: "50px" }}>
-      <Row>
+      <Row style={{ display: "flex", justifyContent: "center" }}>
         {list &&
-          list.map((groupObj, index) => (
-            <Col md={3} style={{ marginBottom: "20px" }}>
+          list.map((groupObj) => (
+            <Col md={4} style={{ marginBottom: "20px" }}>
               <Card
                 style={{
                   background: "#6c0092",

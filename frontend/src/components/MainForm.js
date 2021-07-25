@@ -37,6 +37,11 @@ const MainForm = () => {
     });
   }
 
+  const DisciplineCode = [];
+  for (let i = 1; i < 30; i++) {
+    DisciplineCode.push(i > 9 ? `${i}` : `0${i}`);
+  }
+
   const onFormSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target),
@@ -73,20 +78,40 @@ const MainForm = () => {
             </Alert>
           )}
           <Form onSubmit={onFormSubmit} validated>
-            <Form.Group className="mb-3" controlId="batch">
-              <Form.Select
-                required
-                name="batch"
-                aria-label="Default select example"
-              >
-                <option key="empty" value={""}>
-                  Select a batch
-                </option>
-                {batch.map((oneBatch) => (
-                  <option key={oneBatch}>{oneBatch}</option>
-                ))}
-              </Form.Select>
-            </Form.Group>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="batch">
+                  <Form.Select
+                    required
+                    name="batch"
+                    aria-label="Default select example"
+                  >
+                    <option key="empty" value={""}>
+                      Select a batch
+                    </option>
+                    {batch.map((oneBatch) => (
+                      <option key={oneBatch}>{oneBatch}</option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-3" controlId="discipline code">
+                  <Form.Select
+                    required
+                    name="DisciplineCode"
+                    aria-label="Default select example"
+                  >
+                    <option key="empty" value={""}>
+                      Select a discipline code
+                    </option>
+                    {DisciplineCode.map((dCode) => (
+                      <option key={dCode}>{dCode}</option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+            </Row>
             <Row>
               <Col>
                 <Form.Group className="mb-3" controlId="endroll">
@@ -130,7 +155,9 @@ const MainForm = () => {
             <Row>
               <Col>
                 <Form.Group className="mb-3" controlId="startroll">
-                  <Form.Label>Add other rolls:</Form.Label>
+                  <Form.Label>
+                    Add prev year student( continue with current batch):
+                  </Form.Label>
                   <Form.Select
                     required
                     name="prevYearBatch"
@@ -149,7 +176,7 @@ const MainForm = () => {
               </Col>
               <Col>
                 <Form.Group className="mb-3" controlId="explicitroll">
-                  <Form.Label>Prev year Roll:</Form.Label>
+                  <Form.Label>select Previous year Roll:</Form.Label>
                   <Select
                     name="prevYearRoll"
                     onChange={handlePrevYearRollArray}
