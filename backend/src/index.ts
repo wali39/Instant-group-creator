@@ -3,17 +3,83 @@ import cookieParser = require("cookie-parser");
 import logger = require("morgan");
 import cors from "cors";
 const debug = require("debug")("app");
-
+import { createConnection, getConnection } from "typeorm";
 const app = express();
 app.use(logger("dev"));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
-app.get("/test", (req: express.Request, res: express.Response) => {
-  res.status(200).json("test success");
+import { GroupForm } from "./entity/groupform";
+createConnection({
+  type: "sqlite",
+  database: "./db.sqlite",
+  entities: [GroupForm],
+  synchronize: true,
 });
+
+let dataList: object[] = [];
+app
+  .route("/")
+  .get(async (req: express.Request, res: express.Response) => {
+    const groupformRepository = getConnection().getRepository(GroupForm);
+    const findall = await groupformRepository.find();
+    res.status(200).json({ data: dataList });
+  })
+  .post(async (req: express.Request, res: express.Response) => {
+    const { batch, startRoll, lastRoll, skipRoll, stuedentPerGroup } = req.body;
+    const studentList = [];
+    for (let i = parseInt(startRoll); i < parseInt(lastRoll) + 1; i++) {
+      studentList.push(i > 9 ? `${batch}09${i}` : `${batch}090${i}`);
+    }
+
+    const skipStudentRoll: string[] = [];
+    for (let i = 0; i < skipRoll.length; i++) {
+      skipStudentRoll.push(`1909${skipRoll[i]}`);
+    }
+
+    const updatedList = studentList.filter(
+      (item) => !skipStudentRoll.includes(item)
+    );
+
+    interface studentObj {
+      groupN: number;
+      studentArr: string[];
+    }
+    let temparr = [];
+    let groupNumber = 1;
+    let count = 0;
+    let studentListUpdate: studentObj[] = [];
+    for (let i = 0; i < updatedList.length; i++) {
+      temparr.push(updatedList[i]);
+      count++;
+
+      if (count === 5) {
+        let individualstudent: studentObj = {
+          groupN: groupNumber,
+          studentArr: temparr,
+        };
+        studentListUpdate.push(individualstudent);
+        temparr = [];
+        count = 0;
+        groupNumber = groupNumber + 1;
+      } else if (i === updatedList.length - 1 && count !== 5) {
+        let individualstudent: studentObj = {
+          groupN: groupNumber,
+          studentArr: temparr,
+        };
+        studentListUpdate.push(individualstudent);
+        temparr = [];
+        count = 0;
+        groupNumber = groupNumber + 1;
+      }
+    }
+    dataList = studentListUpdate;
+    res.status(200).json({
+      success: true,
+      message: "created successfully",
+    });
+  });
 
 const port = 4000;
 

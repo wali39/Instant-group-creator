@@ -1,10 +1,11 @@
 import logo from "./logo.svg";
 import "./App.css";
 import { Route, Switch } from "react-router-dom";
-import Profile from "./components/Profile";
-import Registration from "./components/Registration";
-import Navigation from "./components/Navigation";
+
+import MainForm from "./components/MainForm";
+
 import { AnimatePresence } from "framer-motion";
+import GroupInfo from "./components/GroupInfo";
 
 function App() {
   return (
@@ -12,8 +13,8 @@ function App() {
       {/* <Navigation /> */}
       <AnimatePresence exitBeforeEnter>
         <Switch>
-          <Route path="/" exact component={Profile} />
-          {/* <Route path="/reg" exact component={Registration} /> */}
+          <Route path="/" exact component={MainForm} />
+          <Route path="/group" exact component={GroupInfo} />
         </Switch>
       </AnimatePresence>
     </>

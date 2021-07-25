@@ -11,10 +11,10 @@ const Navigation = () => {
       }}
     >
       <li>
-        <Link to="/">profile</Link>
+        <Link to="/">Home</Link>
       </li>
       <li>
-        <Link to="/reg">Registration</Link>
+        <Link to="/group">Registration</Link>
       </li>
       <Button variant="contained">Default</Button>
       <Button variant="contained" color="primary">
