@@ -6,11 +6,18 @@ import { useHistory } from "react-router";
 const MainForm = () => {
   const history = useHistory();
   const [selectData, setselectData] = useState([]);
+  const [selectPreviousYearRoll, setSelectPreviousYearRoll] = useState([]);
   const [show, setShow] = useState(true);
   const [msg, setMessage] = useState();
 
   const handleSelectArray = (e) => {
     setselectData(Array.isArray(e) ? e.map((obj) => obj.value) : []);
+  };
+
+  const handlePrevYearRollArray = (e) => {
+    setSelectPreviousYearRoll(
+      Array.isArray(e) ? e.map((obj) => obj.value) : []
+    );
   };
 
   const batch = [17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30];
@@ -35,6 +42,7 @@ const MainForm = () => {
     const formData = new FormData(e.target),
       formDataObj = Object.fromEntries(formData.entries());
     formDataObj.skipRoll = selectData;
+    formDataObj.prevYearRoll = selectPreviousYearRoll;
     console.log(formDataObj);
     formFetch(formDataObj)
       .then((res) => res.json())
@@ -64,10 +72,16 @@ const MainForm = () => {
               </div>
             </Alert>
           )}
-          <Form onSubmit={onFormSubmit}>
+          <Form onSubmit={onFormSubmit} validated>
             <Form.Group className="mb-3" controlId="batch">
-              <Form.Select name="batch" aria-label="Default select example">
-                <option>Select a batch</option>
+              <Form.Select
+                required
+                name="batch"
+                aria-label="Default select example"
+              >
+                <option key="empty" value={""}>
+                  Select a batch
+                </option>
                 {batch.map((oneBatch) => (
                   <option key={oneBatch}>{oneBatch}</option>
                 ))}
@@ -94,7 +108,9 @@ const MainForm = () => {
                     required
                     aria-label="Default select example"
                   >
-                    <option>Select last roll</option>
+                    <option key="empty" value={""}>
+                      Select last roll
+                    </option>
                     {endRoll.map((roll) => (
                       <option key={roll}>{roll}</option>
                     ))}
@@ -111,13 +127,48 @@ const MainForm = () => {
                 isMulti
               />
             </Form.Group>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="startroll">
+                  <Form.Label>Add other rolls:</Form.Label>
+                  <Form.Select
+                    required
+                    name="studentPerGroup"
+                    aria-label="Default select example"
+                  >
+                    <option key={"empty"} value={""}>
+                      Select batch
+                    </option>
+                    {[16, 17, 18, 19].map((student) => (
+                      <option key={student} value={student}>
+                        {student}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-3" controlId="explicitroll">
+                  <Form.Label>Prev year Roll:</Form.Label>
+                  <Select
+                    name="prevYearRoll"
+                    onChange={handlePrevYearRollArray}
+                    options={skipRoll}
+                    isMulti
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
             <Form.Group className="mb-3" controlId="startroll">
               <Form.Label>Number of student in group:</Form.Label>
               <Form.Select
+                required
                 name="studentPerGroup"
                 aria-label="Default select example"
               >
-                <option>Select student per group</option>
+                <option key={"empty"} value={""}>
+                  Select number of student in a group
+                </option>
                 {numberOfStudentIngroup.map((student) => (
                   <option key={student} value={student}>
                     {student}
