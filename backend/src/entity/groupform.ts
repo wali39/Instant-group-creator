@@ -4,11 +4,6 @@ export class GroupForm {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  @Column("int")
-  batch!: number;
-
   @Column("simple-array")
-  skip!: number[];
-  @Column('simple-array')
-  explicitRoll!:number[]
+  data!: object[];
 }

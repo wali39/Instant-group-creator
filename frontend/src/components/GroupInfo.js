@@ -7,21 +7,34 @@ import groupsign from "../assets/images/grouplogo2.jpg";
 
 const GroupInfo = () => {
   const [list, setList] = useState([]);
+  const [group, setGroup] = useState();
+  const [total, setTotal] = useState();
+  const [studentIngroup, setStudentIngroup] = useState();
   useEffect(() => {
-    fetch("http://localhost:4000", {
+    fetch("https://groupapi39.herokuapp.com", {
       method: "get",
     })
       .then((res) => res.json())
-      .then(({ data }) => {
+      .then(({ data, group, totalStudent, studentInGroup }) => {
         setList(data);
+        setGroup(group);
+        setTotal(totalStudent);
+        setStudentIngroup(studentInGroup);
       });
   }, []);
 
   return (
-    <Container style={{ marginBottom: "50px" }}>
+    <Container style={{ marginTop: "50px", marginBottom: "50px" }}>
       <Row style={{ display: "flex", justifyContent: "center" }}>
-        {list &&
-          list.map((groupObj) => (
+        <div style={{ textAlign: "center", marginBottom: "20px" }}>
+          <h2 style={{ fontWeight: "400" }}>Total Students {total}</h2>
+          <p style={{ fontSize: "20px" }}>Total Group {group}</p>
+          <p style={{ fontSize: "20px" }}>
+            {studentIngroup} Students in One Group
+          </p>
+        </div>
+        {list && list.length ? (
+          list.map((groupObj, index) => (
             <Col md={4} style={{ marginBottom: "20px" }}>
               <Card
                 style={{
@@ -58,12 +71,27 @@ const GroupInfo = () => {
                 </Card.Body>
               </Card>
             </Col>
-          ))}
+          ))
+        ) : (
+          <Col>
+            <div style={{ margin: "50px 0", textAlign: "center" }}>
+              <Alert variant="info">
+                Please fill up form to show group list
+              </Alert>
+            </div>
+          </Col>
+        )}
       </Row>
       <div>
         <Link to="/">
-          <span style={{ padding: "10px 20px", background: "#0984e3" }}>
-            Back to Home
+          <span
+            style={{
+              padding: "10px 20px",
+              background: "#cff4fc",
+              fontSize: "18px",
+            }}
+          >
+            <i class="fas fa-long-arrow-alt-right"></i> Go to Form
           </span>
         </Link>
       </div>

@@ -1,4 +1,4 @@
-import { Form, Button, Row, Col, Container, Alert } from "react-bootstrap";
+import { Form, Button, Row, Col, Container } from "react-bootstrap";
 import { formFetch } from "../client/form.client";
 import { useState } from "react";
 import Select from "react-select";
@@ -7,8 +7,6 @@ const MainForm = () => {
   const history = useHistory();
   const [selectData, setselectData] = useState([]);
   const [selectPreviousYearRoll, setSelectPreviousYearRoll] = useState([]);
-  const [show, setShow] = useState(true);
-  const [msg, setMessage] = useState();
 
   const handleSelectArray = (e) => {
     setselectData(Array.isArray(e) ? e.map((obj) => obj.value) : []);
@@ -51,36 +49,39 @@ const MainForm = () => {
     console.log(formDataObj);
     formFetch(formDataObj)
       .then((res) => res.json())
-      .then(({ success, message: msg }) => {
+      .then(({ success, message: msg, data }) => {
         if (success) {
-          setMessage(msg);
           history.push("/group");
+          console.log(data);
         }
       });
   };
 
   return (
     <Container>
-      <Row style={{ justifyContent: "center" }}>
-        <Col md={6}>
-          {msg && (
-            <Alert show={show} variant="success">
-              <Alert.Heading>{msg}</Alert.Heading>
-
-              <div className="d-flex justify-content-end">
-                <Button
-                  onClick={() => setShow(false)}
-                  variant="outline-success"
-                >
-                  ok
-                </Button>
-              </div>
-            </Alert>
-          )}
+      <Row style={{ justifyContent: "center", marginTop: "100px" }}>
+        <Col
+          md={6}
+          style={{
+            border: "2px solid #6c0092",
+            borderRadius: "5px",
+            padding: "10px",
+          }}
+        >
+          <div
+            style={{
+              textAlign: "center",
+              marginBottom: "20px",
+            }}
+          >
+            <h2 style={{ fontWeight: "400" }}> Group Creating Form</h2>
+            <p>Select your neccessary field and submit form</p>
+          </div>
           <Form onSubmit={onFormSubmit} validated>
             <Row>
               <Col>
                 <Form.Group className="mb-3" controlId="batch">
+                  {/* <Form.Label>Batch:</Form.Label> */}
                   <Form.Select
                     required
                     name="batch"
@@ -97,6 +98,7 @@ const MainForm = () => {
               </Col>
               <Col>
                 <Form.Group className="mb-3" controlId="discipline code">
+                  {/* <Form.Label>Discipline code:</Form.Label> */}
                   <Form.Select
                     required
                     name="DisciplineCode"
@@ -155,9 +157,7 @@ const MainForm = () => {
             <Row>
               <Col>
                 <Form.Group className="mb-3" controlId="startroll">
-                  <Form.Label>
-                    Add prev year student( continue with current batch):
-                  </Form.Label>
+                  <Form.Label>Add prev year student:</Form.Label>
                   <Form.Select
                     required
                     name="prevYearBatch"
@@ -176,7 +176,7 @@ const MainForm = () => {
               </Col>
               <Col>
                 <Form.Group className="mb-3" controlId="explicitroll">
-                  <Form.Label>select Previous year Roll:</Form.Label>
+                  <Form.Label>Select Previous year Rolls:</Form.Label>
                   <Select
                     name="prevYearRoll"
                     onChange={handlePrevYearRollArray}

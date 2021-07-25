@@ -22,13 +22,21 @@ createConnection({
 });
 
 let dataList: object[] = [];
+let TotalGroup: number;
+let totalStudent: number;
+let studentInGroup: number;
 
 app
   .route("/")
   .get(async (req: express.Request, res: express.Response) => {
     const groupformRepository = getConnection().getRepository(GroupForm);
     const findall = await groupformRepository.find();
-    res.status(200).json({ data: dataList });
+    res.status(200).json({
+      data: dataList,
+      group: TotalGroup,
+      totalStudent,
+      studentInGroup,
+    });
   })
   .post(async (req: express.Request, res: express.Response) => {
     const {
@@ -41,6 +49,7 @@ app
       prevYearRoll,
       DisciplineCode,
     } = req.body;
+
     const studentList = [];
 
     for (let i = parseInt(startRoll); i < parseInt(lastRoll) + 1; i++) {
@@ -71,13 +80,14 @@ app
     }
     let temparr = [];
     let groupNumber = 1;
+    let totalGroup = 0;
     let count = 0;
     let studentListUpdate: studentObj[] = [];
     for (let i = 0; i < updatedList.length; i++) {
       temparr.push(updatedList[i]);
       count++;
-
       if (count === parseInt(studentPerGroup)) {
+        totalGroup++;
         let individualstudent: studentObj = {
           groupN: groupNumber,
           studentArr: temparr,
@@ -90,6 +100,7 @@ app
         i === updatedList.length - 1 &&
         count !== parseInt(studentPerGroup)
       ) {
+        totalGroup++;
         let individualstudent: studentObj = {
           groupN: groupNumber,
           studentArr: temparr,
@@ -101,6 +112,9 @@ app
       }
     }
     dataList = studentListUpdate;
+    TotalGroup = totalGroup;
+    totalStudent = updatedList.length;
+    studentInGroup = parseInt(studentPerGroup);
     res.status(200).json({
       success: true,
       message: "created successfully",
