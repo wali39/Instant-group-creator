@@ -133,7 +133,7 @@ const MainForm = () => {
                   <Form.Label>Add other rolls:</Form.Label>
                   <Form.Select
                     required
-                    name="studentPerGroup"
+                    name="prevYearBatch"
                     aria-label="Default select example"
                   >
                     <option key={"empty"} value={""}>
