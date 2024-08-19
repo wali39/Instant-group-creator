@@ -11,7 +11,8 @@ const GroupInfo = () => {
   const [total, setTotal] = useState();
   const [studentIngroup, setStudentIngroup] = useState();
   useEffect(() => {
-    fetch("https://groupapi39.herokuapp.com", {
+
+    fetch(process.env.REACT_APP_API_URL, {
       method: "get",
     })
       .then((res) => res.json())
